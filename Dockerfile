@@ -8,4 +8,4 @@ COPY /$BUILD_NUM /service
 
 WORKDIR /service
 
-CMD service-b
+CMD ls

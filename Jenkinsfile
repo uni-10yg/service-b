@@ -1,1 +1,1 @@
-deployment_pipeline(NAME: 'service_b', srcPath: '/go/src/service-b', binPath: '/go/bin')
+deployment_pipeline(NAME: 'service-b', srcPath: '/go/src/service-b', binPath: '/go/bin')

@@ -1,9 +1,9 @@
 FROM golang:1.10
 
-RUN mkdir -p /go/bin
-RUN mkdir -p /go/pkg
-RUN mkdir -p /go/src/service-b
+RUN mkdir -p go/bin
+RUN mkdir -p go/pkg
+RUN mkdir -p go/src/service-b
 
-WORKDIR /go
+WORKDIR go
 
 CMD go get -d -v service-b && go install -i -v -x service-b

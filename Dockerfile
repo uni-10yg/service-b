@@ -4,6 +4,8 @@ ARG BUILD_NUM
 
 RUN mkdir /service
 
-COPY /$BUILD_NUM/* /service
-
 WORKDIR /service
+
+COPY $BUILD_NUM/* .
+
+ENTRYPOINT service-b

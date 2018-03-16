@@ -2,4 +2,4 @@ FROM golang:1.10
 
 RUN mkdir -p src/service-b
 
-CMD ls src/service-b
+CMD go get -d -v service-b && go install -i -v -x service-b

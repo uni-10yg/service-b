@@ -7,5 +7,3 @@ RUN mkdir /service
 COPY /$BUILD_NUM /service
 
 WORKDIR /service
-
-CMD ls

@@ -38,6 +38,7 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 	//if err != nil {
 	//	log.Println(err)
 	//}
+	log.Println(salted_hash)
 	json.NewEncoder(resp_writer).Encode(salted_hash)
 }
 

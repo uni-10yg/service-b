@@ -10,6 +10,7 @@ import (
 	"io"
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/ssh/test"
 )
 
 type SaltedHash struct {
@@ -63,6 +64,9 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 }
 
 func main() {
+	var amqp_client AmqpClient
+	amqp_client.connectToBroker("")
+
 	router := mux.NewRouter()
 	router.HandleFunc("/", postPhrase).Methods("POST")
 	log.Fatal(http.ListenAndServe("0.0.0.0:8081", router))

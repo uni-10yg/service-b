@@ -54,7 +54,7 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 			panic(err)
 		}
 	}
-	log.Printf("got: %s", phrase)
+	log.Printf("got: %s", phrase.Value)
 	salted_hash_b, err := json.Marshal(hashAndSalt(phrase.Value))
 	if err != nil {
 		panic(err)

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	//"github.com/gorilla/mux"
+	"github.com/gorilla/mux"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request){
@@ -13,8 +13,9 @@ func homePage(w http.ResponseWriter, r *http.Request){
 }
 
 func handleRequests() {
+	router := mux.NewRouter()
 	http.HandleFunc("/", homePage)
-	log.Fatal(http.ListenAndServe("0.0.0.0:8081", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8081", router))
 }
 
 func main() {

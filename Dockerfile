@@ -8,6 +8,4 @@ WORKDIR /service
 
 COPY $BUILD_NUM/* .
 
-EXPOSE 8081
-
 ENTRYPOINT ./service-b

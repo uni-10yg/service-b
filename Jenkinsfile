@@ -1,1 +1,1 @@
-deployment_pipeline(NAME: 'service-b', srcPath: '/go/src/service-b', binPath: '/go/bin')
+deployment_pipeline(name: 'service-b', port: '8081' srcPath: '/go/src/service-b', binPath: '/go/bin')

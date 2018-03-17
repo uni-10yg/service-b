@@ -28,6 +28,7 @@ func randomFromRange(low, high int) int {
 
 func hashAndSalt(phrase string) SaltedHash {
 	salt := randomFromRange(bcrypt.MinCost, bcrypt.MaxCost)
+	log.Println(salt)
 	hash, err := bcrypt.GenerateFromPassword([]byte(phrase), salt)
 	if err != nil {
 		panic(err)
@@ -52,7 +53,7 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 			panic(err)
 		}
 	}
-	log.Printf(phrase.Value)
+	log.Println(phrase.Value)
 	salted_hash := hashAndSalt(phrase.Value)
 	log.Println(salted_hash)
 	resp_writer.Header().Set("Content-Type", "application/json; charset=UTF-8")

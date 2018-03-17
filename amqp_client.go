@@ -5,6 +5,11 @@ import (
 	"github.com/streadway/amqp"
 )
 
+type IamqpClient interface {
+	connectToBroker(broker_url string)
+	sendMsg(msg []byte, queueName string) error
+	close()
+}
 
 type AmqpClient struct {
 	conn *amqp.Connection

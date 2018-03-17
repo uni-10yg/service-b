@@ -12,6 +12,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var amqp_client IamqpClient
+
 type SaltedHash struct {
 	Hash	string	`json:"hash"`
 	Salt	int		`json:"salt"`
@@ -52,20 +54,22 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 			panic(err)
 		}
 	}
-	log.Println(phrase.Value)
-	salted_hash := hashAndSalt(phrase.Value)
-	log.Println(salted_hash)
-	resp_writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	resp_writer.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(resp_writer).Encode(salted_hash); err != nil {
+
+	salted_hash_b, err := json.Marshal(hashAndSalt(phrase.Value))
+	if err != nil {
 		panic(err)
 	}
+
+	amqp_client.sendMsg(salted_hash_b, "comm_queue")
+
+	resp_writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	resp_writer.WriteHeader(http.StatusCreated)
+	resp_writer.Write(salted_hash_b)
 }
 
 func main() {
-	var amqp_client AmqpClient
+	amqp_client = &AmqpClient{}
 	amqp_client.connectToBroker("")
-
 	router := mux.NewRouter()
 	router.HandleFunc("/", postPhrase).Methods("POST")
 	log.Fatal(http.ListenAndServe("0.0.0.0:8081", router))

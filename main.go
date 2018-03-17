@@ -10,7 +10,6 @@ import (
 	"io"
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
-	"golang.org/x/crypto/ssh/test"
 )
 
 type SaltedHash struct {

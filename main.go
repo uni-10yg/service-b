@@ -55,12 +55,12 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 			panic(err)
 		}
 	}
-	fmt.Printf("got: %s", phrase)
+	log.Printf("got: %s", phrase)
 	salted_hash_b, err := json.Marshal(hashAndSalt(phrase.Value))
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("generated: %s", salted_hash_b)
+	log.Printf("generated: %s", salted_hash_b)
 
 	//amqp_client.sendMsg(salted_hash_b, "comm_queue")
 

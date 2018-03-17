@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/streadway/amqp"
+	"log"
 )
 
 type IamqpClient interface {
@@ -21,7 +21,7 @@ func (m *AmqpClient) connectToBroker(broker_url string) {
 	}
 
 	var err error
-	m.conn, err = amqp.Dial(fmt.Sprintf("%s/", broker_url))
+	m.conn, err = amqp.Dial(broker_url)
 	if err != nil {
 		panic("could not connect to message broker at: " + broker_url)
 	}
@@ -54,7 +54,7 @@ func (m *AmqpClient) sendMsg(body []byte, queueName string) error {
 			ContentType: "application/json",
 			Body:        body,
 		})
-	fmt.Printf("message sent to queue %v: %v", queueName, body)
+	log.Printf("message sent to queue %v: %v", queueName, body)
 	return err
 }
 
@@ -66,7 +66,7 @@ func (m *AmqpClient) close() {
 
 func failOnError(err error, msg string) {
 	if err != nil {
-		fmt.Printf("%s: %s", msg, err)
-		panic(fmt.Sprintf("%s: %s", msg, err))
+		log.Printf("%s: %s", msg, err)
+		panic(err)
 	}
 }

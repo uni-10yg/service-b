@@ -10,6 +10,7 @@ import (
 	"io"
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
+	"fmt"
 )
 
 var amqp_client IamqpClient
@@ -54,13 +55,14 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 			panic(err)
 		}
 	}
-
+	fmt.Printf("got: %s", phrase)
 	salted_hash_b, err := json.Marshal(hashAndSalt(phrase.Value))
 	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("generated: %s", salted_hash_b)
 
-	amqp_client.sendMsg(salted_hash_b, "comm_queue")
+	//amqp_client.sendMsg(salted_hash_b, "comm_queue")
 
 	resp_writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	resp_writer.WriteHeader(http.StatusCreated)
@@ -69,7 +71,7 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 
 func main() {
 	amqp_client = &AmqpClient{}
-	amqp_client.connectToBroker("")
+	//amqp_client.connectToBroker("")
 	router := mux.NewRouter()
 	router.HandleFunc("/", postPhrase).Methods("POST")
 	log.Fatal(http.ListenAndServe("0.0.0.0:8081", router))

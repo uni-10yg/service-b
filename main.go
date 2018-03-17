@@ -27,8 +27,7 @@ func randomFromRange(low, high int) int {
 }
 
 func hashAndSalt(phrase string) SaltedHash {
-	salt := randomFromRange(bcrypt.MinCost, bcrypt.MaxCost)
-	log.Println(salt)
+	salt := randomFromRange(bcrypt.MinCost, bcrypt.DefaultCost)
 	hash, err := bcrypt.GenerateFromPassword([]byte(phrase), salt)
 	if err != nil {
 		panic(err)

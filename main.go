@@ -1,21 +1,20 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	//"encoding/json"
 	"github.com/gorilla/mux"
 )
 
-func homePage(w http.ResponseWriter, r *http.Request){
-	fmt.Fprintf(w, "Welcome to the HomePage!")
-	fmt.Println("Endpoint Hit: homePage")
+func postCredentials(resp_writer http.ResponseWriter, request *http.Request) {
+
 }
 
 func handleRequests() {
 	router := mux.NewRouter()
-	http.HandleFunc("/", homePage)
-	log.Fatal(http.ListenAndServe("0.0.0.0:8081", router))
+	router.HandleFunc("/", postCredentials).Methods("POST")
+	log.Fatal(http.ListenAndServe(":8081", router))
 }
 
 func main() {

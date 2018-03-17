@@ -61,7 +61,7 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 	}
 	log.Printf("generated: %s", salted_hash_b)
 
-	//amqp_client.sendMsg(salted_hash_b, "comm_queue")
+	amqp_client.sendMsg(salted_hash_b, "comm_queue")
 
 	resp_writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	resp_writer.WriteHeader(http.StatusCreated)
@@ -70,7 +70,7 @@ func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
 
 func main() {
 	amqp_client = &AmqpClient{}
-	//amqp_client.connectToBroker("")
+	amqp_client.connectToBroker("amqp://guest:guest@rabbitmq:5672/")
 	router := mux.NewRouter()
 	router.HandleFunc("/", postPhrase).Methods("POST")
 	log.Fatal(http.ListenAndServe("0.0.0.0:8081", router))

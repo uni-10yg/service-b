@@ -10,7 +10,6 @@ import (
 	"io"
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
-	"fmt"
 )
 
 var amqp_client IamqpClient

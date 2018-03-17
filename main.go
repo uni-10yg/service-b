@@ -4,16 +4,21 @@ import (
 	"log"
 	"net/http"
 	"math/rand"
-	//"encoding/json"
-	"github.com/gorilla/mux"
-	"golang.org/x/crypto/bcrypt"
 	"time"
 	"encoding/json"
+	"io/ioutil"
+	"io"
+	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type SaltedHash struct {
 	Hash	string	`json:"hash"`
 	Salt	int		`json:"salt"`
+}
+
+type Phrase struct {
+	Value	string `json:"phrase"`
 }
 
 func randomFromRange(low, high int) int {
@@ -32,22 +37,31 @@ func hashAndSalt(phrase string) SaltedHash {
 }
 
 func postPhrase(resp_writer http.ResponseWriter, request *http.Request) {
-	params := mux.Vars(request)
-	salted_hash := hashAndSalt(params["phrase"])
-	//bytes, err := json.Marshal(salted_hash)
-	//if err != nil {
-	//	log.Println(err)
-	//}
-	log.Println(salted_hash)
-	json.NewEncoder(resp_writer).Encode(salted_hash)
-}
-
-func handleRequests() {
-	router := mux.NewRouter()
-	router.HandleFunc("/", postPhrase).Methods("POST")
-	log.Fatal(http.ListenAndServe("0.0.0.0:8081", router))
+	body, err := ioutil.ReadAll(io.LimitReader(request.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err := request.Body.Close(); err != nil {
+		panic(err)
+	}
+	var phrase Phrase
+	if err := json.Unmarshal(body, &phrase); err != nil {
+		resp_writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		resp_writer.WriteHeader(422)
+		if err := json.NewEncoder(resp_writer).Encode(err); err != nil {
+			panic(err)
+		}
+	}
+	salted_hash := hashAndSalt(phrase.Value)
+	resp_writer.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	resp_writer.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(resp_writer).Encode(salted_hash); err != nil {
+		panic(err)
+	}
 }
 
 func main() {
-	handleRequests()
+	router := mux.NewRouter()
+	router.HandleFunc("/", postPhrase).Methods("POST")
+	log.Fatal(http.ListenAndServe("0.0.0.0:8081", router))
 }
